@@ -50,6 +50,14 @@
             <version>${allure.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- REST Assured for API interactions in tests -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -63,9 +71,15 @@
                     <includes>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>io.qameta.allure.junit4.AllureJunit4</value>
+                        </property>
+                    </properties>
                     <systemPropertyVariables>
                         <!-- Directory where Allure will collect results -->
-                        <allure.results.directory>allure-results</allure.results.directory>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

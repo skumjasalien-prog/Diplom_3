@@ -4,17 +4,36 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.example.api.TestUser;
+import org.example.api.UserApiClient;
 import org.example.driver.BaseTest;
 import org.example.pages.ForgotPasswordPage;
 import org.example.pages.LoginPage;
 import org.example.pages.MainPage;
 import org.example.pages.RegisterPage;
 import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 @Epic("Stellar Burgers")
 @Feature("Авторизация")
 public class LoginTests extends BaseTest {
+
+    private final UserApiClient userApiClient = new UserApiClient();
+    private TestUser testUser;
+
+    @Before
+    public void createTestUser() {
+        testUser = userApiClient.createRandomUser();
+    }
+
+    @After
+    public void deleteTestUser() {
+        if (testUser != null) {
+            userApiClient.deleteUser(testUser.getAccessToken());
+        }
+    }
 
     @Test
     @Story("Вход по кнопке 'Войти в аккаунт' на главной")
@@ -23,7 +42,7 @@ public class LoginTests extends BaseTest {
         MainPage mainPage = new MainPage(driver);
         LoginPage loginPage = mainPage.clickLoginToAccount();
 
-        MainPage afterLogin = loginPage.login(EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD);
+        MainPage afterLogin = loginPage.login(testUser.getEmail(), testUser.getPassword());
         Assert.assertTrue("После логина со страницы 'Войти в аккаунт' должна быть доступна главная с кнопкой 'Личный кабинет'",
                 afterLogin.isPersonalAccountButtonVisible());
     }
@@ -35,7 +54,7 @@ public class LoginTests extends BaseTest {
         MainPage mainPage = new MainPage(driver);
         LoginPage loginPage = mainPage.clickPersonalAccount();
 
-        MainPage afterLogin = loginPage.login(EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD);
+        MainPage afterLogin = loginPage.login(testUser.getEmail(), testUser.getPassword());
         Assert.assertTrue("После логина через 'Личный кабинет' должна быть доступна главная с кнопкой 'Личный кабинет'",
                 afterLogin.isPersonalAccountButtonVisible());
     }
@@ -50,7 +69,7 @@ public class LoginTests extends BaseTest {
         RegisterPage registerPage = loginPage.goToRegister();
         LoginPage backToLogin = registerPage.goToLoginFromRegister();
 
-        MainPage afterLogin = backToLogin.login(EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD);
+        MainPage afterLogin = backToLogin.login(testUser.getEmail(), testUser.getPassword());
         Assert.assertTrue("После логина из формы регистрации должна быть доступна главная с кнопкой 'Личный кабинет'",
                 afterLogin.isPersonalAccountButtonVisible());
     }
@@ -65,7 +84,7 @@ public class LoginTests extends BaseTest {
         ForgotPasswordPage forgotPasswordPage = loginPage.goToForgotPassword();
         LoginPage backToLogin = forgotPasswordPage.goToLoginFromForgotPassword();
 
-        MainPage afterLogin = backToLogin.login(EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD);
+        MainPage afterLogin = backToLogin.login(testUser.getEmail(), testUser.getPassword());
         Assert.assertTrue("После логина со страницы восстановления пароля должна быть доступна главная с кнопкой 'Личный кабинет'",
                 afterLogin.isPersonalAccountButtonVisible());
     }

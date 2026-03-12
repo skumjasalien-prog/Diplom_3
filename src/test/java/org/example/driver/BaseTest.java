@@ -16,10 +16,6 @@ public abstract class BaseTest {
 
     protected static final String BASE_URL = "https://stellarburgers.education-services.ru/";
 
-    // Задайте действующие логин/пароль существующего пользователя
-    protected static final String EXISTING_USER_EMAIL = "user@example.com";
-    protected static final String EXISTING_USER_PASSWORD = "password123";
-
     @Before
     public void setUp() {
         String browser = System.getProperty("browser", "chrome").toLowerCase();
