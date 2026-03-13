@@ -5,8 +5,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -27,19 +25,16 @@ public class UserApiClient {
 
         TestUser user = new TestUser(email, password, name);
 
-        Map<String, String> body = new HashMap<>();
-        body.put("email", email);
-        body.put("password", password);
-        body.put("name", name);
+        CreateUserRequest requestBody = new CreateUserRequest(email, password, name);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(body)
+                .body(requestBody)
                 .when()
                 .post("/api/auth/register");
 
-        String accessToken = response.then()
-                .statusCode(200)
+        String accessToken = response
+                .then()
                 .extract()
                 .path("accessToken");
 

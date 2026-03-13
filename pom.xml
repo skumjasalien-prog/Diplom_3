@@ -84,7 +84,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Allure Maven plugin to build reports -->
+            <!-- Плагин Allure Maven для создания отчетов -->
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
